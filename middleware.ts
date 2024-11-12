@@ -2,7 +2,21 @@ import { clerkMiddleware } from "@clerk/nextjs/server";
 
 // This Middleware does not protect any routes by default.
 // See https://clerk.com/docs/references/nextjs/clerk-middleware for more information about configuring your Middleware
-export default clerkMiddleware();
+export default clerkMiddleware(
+  async (auth, res) => {
+    if (res.nextUrl.pathname === "/") {
+      await auth.protect();
+    }
+  },
+  {
+    publishableKey: "<Your-pk-here-not-inside-an-env>",
+    secretKey: "<Your-sk-here-not-inside-an-env>",
+    signInUrl: "/sign-in",
+    signUpUrl: "/sign-up",
+    afterSignInUrl: "/one",
+    afterSignUpUrl: "/two",
+  }
+);
 
 export const config = {
   matcher: [
